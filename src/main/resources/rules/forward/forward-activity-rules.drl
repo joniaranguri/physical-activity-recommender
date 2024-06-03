@@ -1,0 +1,122 @@
+package rules;
+
+import model.persona.Persona;
+import model.persona.GrupoEtario;
+import model.actividades.Actividad;
+import model.actividades.Intensidad;
+import model.recomendacion.Recomendacion;
+import model.recomendacion.Tiempo;
+
+// Reglas para clasificar personas en grupos etarios
+
+rule "R1 - Clasficar como persona joven"
+	when
+        $persona: Persona(
+                            edad >= 5,
+                            edad <= 10,
+                            grupo.isa(GrupoEtario.NoDeterminado)
+                          )
+    then
+    	modify($persona) {
+                setGrupo(GrupoEtario.Joven)
+        }
+end
+
+rule "R2 - Clasficar como persona adolescente"
+	when
+        $persona: Persona(
+                            edad > 10,
+                            edad < 18 ,
+                            grupo.isa(GrupoEtario.NoDeterminado)
+                          )
+    then
+    	modify($persona) {
+                setGrupo(GrupoEtario.Adolescente)
+        }
+end
+
+rule "R3 - Clasficar como persona adulta"
+	when
+        $persona: Persona(
+                            edad >= 18,
+                            edad <= 64,
+                            grupo.isa(GrupoEtario.NoDeterminado)
+                          )
+    then
+    	modify($persona) {
+                setGrupo(GrupoEtario.Adulto)
+        }
+end
+
+rule "R4 - Clasficar como persona de tercera edad"
+	when
+        $persona: Persona(
+                            edad > 64,
+                            grupo.isa(GrupoEtario.NoDeterminado)
+                          )
+    then
+    	modify($persona) {
+                setGrupo(GrupoEtario.TerceraEdad)
+        }
+end
+
+rule "R5 - Recomendacion para persona joven"
+    when
+        $persona: Persona(grupo.isa(GrupoEtario.Joven),
+                           recomendacion.sinActividades())
+    then
+        modify($persona) {
+            recomendacion.setTiempo(Tiempo.Minimo60MinutosPorDia),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.CaminarRitmoSuave,Intensidad.Recreacional)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.Paseos,Intensidad.Recreacional)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.Jardineria,Intensidad.Recreacional))
+
+        }
+end
+
+rule "R6 - Recomendacion para persona adolescente"
+    when
+        $persona: Persona(grupo.isa(GrupoEtario.Adolescente),
+                           recomendacion.sinActividades())
+    then
+        modify($persona) {
+            recomendacion.setTiempo(Tiempo.Minimo60MinutosPorDia),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.Correr,Intensidad.Intensa)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.Nadar,Intensidad.Intensa)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.BailarConBuenRitmo,Intensidad.Intensa)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.Futbol,Intensidad.Intensa)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.Voley,Intensidad.Intensa)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.Hockey,Intensidad.Intensa)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.Basquetbol,Intensidad.Intensa)
+            )
+
+        }
+end
+
+rule "R7 - Recomendacion para persona adulta"
+    when
+        $persona: Persona(grupo.isa(GrupoEtario.Adulto),
+                           recomendacion.sinActividades())
+    then
+        modify($persona) {
+            recomendacion.setTiempo(Tiempo.Minimo150MinutosPorSemana),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.CaminarRitmoNormal,Intensidad.Moderada)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.Trotar,Intensidad.Moderada)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.BailarSuave,Intensidad.Moderada))
+
+        }
+end
+
+rule "R8 - Recomendacion para persona de tercera edad"
+    when
+        $persona: Persona(grupo.isa(GrupoEtario.TerceraEdad),
+                           recomendacion.sinActividades())
+    then
+        modify($persona) {
+            recomendacion.setTiempo(Tiempo.Entre150Y300MinutosPorSemana),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.CaminarRitmoNormal,Intensidad.Moderada)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.Trotar,Intensidad.Moderada)),
+            recomendacion.actividades.add(new Actividad(Actividad.Nombre.BailarSuave,Intensidad.Moderada))
+
+        }
+end
