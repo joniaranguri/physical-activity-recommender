@@ -9,7 +9,7 @@ import model.recomendacion.Tiempo;
 
 // Reglas para clasificar personas en grupos etarios
 
-rule "R1 - Clasficar como persona joven"
+rule "R1 - Clasificar como persona joven"
 	when
         $persona: Persona(
                             edad >= 5,
@@ -22,7 +22,7 @@ rule "R1 - Clasficar como persona joven"
         }
 end
 
-rule "R2 - Clasficar como persona adolescente"
+rule "R2 - Clasificar como persona adolescente"
 	when
         $persona: Persona(
                             edad > 10,
@@ -35,7 +35,7 @@ rule "R2 - Clasficar como persona adolescente"
         }
 end
 
-rule "R3 - Clasficar como persona adulta"
+rule "R3 - Clasificar como persona adulta"
 	when
         $persona: Persona(
                             edad >= 18,
@@ -48,7 +48,7 @@ rule "R3 - Clasficar como persona adulta"
         }
 end
 
-rule "R4 - Clasficar como persona de tercera edad"
+rule "R4 - Clasificar como persona de tercera edad"
 	when
         $persona: Persona(
                             edad > 64,
